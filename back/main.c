@@ -4,15 +4,14 @@
 #include <string.h>
 
 #include "header/partitioning.h"
-#include "iso_writer.h"
-#include "bcd_manager.h"
+#include "header/iso_writer.h"
+#include "header/bcd_manager.h"
 
 #define TEMP_DRIVE_LETTER   'P'
 #define PARTITION_PATH      "\\\\.\\P:"
 #define BCD_BACKUP_PATH     "C:\\Windows\\Temp\\pleco_bcd_backup.bcd"
-#define ISO_SIZE_EXTRA_MB   512   // Marge de sécurité en plus de la taille ISO
+#define ISO_SIZE_EXTRA_MB   512
 
-// ── Callback de progression ───────────────────────────────────────────────
 
 void on_progress(unsigned long long written, unsigned long long total) {
     int percent = (int)((written * 100ULL) / total);

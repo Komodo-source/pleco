@@ -1,6 +1,6 @@
 // partitioning.c
 #include "header/partitioning.h"
-#include "utils.h"
+#include "header/utils.h"
 #include <windows.h>
 #include <stdio.h>
 

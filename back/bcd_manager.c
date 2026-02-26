@@ -1,18 +1,16 @@
 // bcd_manager.c
-#include "bcd_manager.h"
-#include "utils.h"
+#include "header/bcd_manager.h"
+#include "header/utils.h"
 #include <windows.h>
 #include <stdio.h>
 #include <string.h>
 
-// Lance bcdedit avec des arguments et capture la sortie
 static int run_bcdedit(const char* args, char* output, DWORD output_size) {
     char command[1024];
     snprintf(command, sizeof(command), "bcdedit %s", args);
     return run_process_with_input(command, NULL, output, output_size);
 }
 
-// ── Backup / Restore ──────────────────────────────────────────────────────
 
 int bcd_backup(const char* backup_path) {
     char args[512];
