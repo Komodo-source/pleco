@@ -87,7 +87,7 @@ int bcd_create_entry(const char* description, char* out_identifier) {
 
 // ── Configurer l'entrée ───────────────────────────────────────────────────
 
-int bcd_configure_entry(const char* id, char drive_letter) {
+int bcd_configure_entry(const char* id, char drive_letter, const char* efi_path) {
     char args[512];
     char output[1024];
     int  failed = 0;
@@ -99,10 +99,10 @@ int bcd_configure_entry(const char* id, char drive_letter) {
         failed = 1;
     }
 
-    // 2. Chemin vers le binaire EFI (standard UEFI : \EFI\boot\bootx64.efi)
+    // 2. Chemin vers le binaire EFI (détecté dynamiquement par iso_writer)
     if (!failed) {
         snprintf(args, sizeof(args),
-                 "/set %s path \\EFI\\boot\\bootx64.efi", id);
+                 "/set %s path %s", id, efi_path);
         if (run_bcdedit(args, output, sizeof(output)) != 0) {
             fprintf(stderr, "[Erreur] bcdedit /set path echoue.\n");
             failed = 1;

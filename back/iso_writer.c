@@ -7,6 +7,43 @@
 #include <ctype.h>
 #include "header/utils.h"
 
+// Cherche bootx64.efi récursivement sous `dir`.
+// `rel` est le chemin relatif courant (ex: "\EFI").
+// Remplit out_rel_path avec le chemin relatif trouvé (ex: "\EFI\BOOT\BOOTx64.EFI").
+// Retourne 1 si trouvé, 0 sinon.
+static int find_efi_binary(const char* dir, const char* rel,
+                            char* out_rel_path, int out_size) {
+    char pattern[MAX_PATH];
+    snprintf(pattern, sizeof(pattern), "%s\\*", dir);
+
+    WIN32_FIND_DATAA fd;
+    HANDLE h = FindFirstFileA(pattern, &fd);
+    if (h == INVALID_HANDLE_VALUE) return 0;
+
+    do {
+        if (fd.cFileName[0] == '.') continue;
+
+        char full[MAX_PATH], rel2[MAX_PATH];
+        snprintf(full,  sizeof(full),  "%s\\%s", dir, fd.cFileName);
+        snprintf(rel2,  sizeof(rel2),  "%s\\%s", rel, fd.cFileName);
+
+        if (fd.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+            if (find_efi_binary(full, rel2, out_rel_path, out_size)) {
+                FindClose(h);
+                return 1;
+            }
+        } else if (_stricmp(fd.cFileName, "bootx64.efi") == 0) {
+            strncpy(out_rel_path, rel2, out_size - 1);
+            out_rel_path[out_size - 1] = '\0';
+            FindClose(h);
+            return 1;
+        }
+    } while (FindNextFileA(h, &fd));
+
+    FindClose(h);
+    return 0;
+}
+
 #pragma comment(lib, "advapi32.lib")
 
 // ── Vérification SHA-256 ──────────────────────────────────────────────────
@@ -66,7 +103,9 @@ int verify_iso_sha256(const char* iso_path, const char* expected_hash) {
 int write_iso_to_partition(
     const char* iso_path,
     char drive_letter,
-    progress_callback_t progress_cb
+    progress_callback_t progress_cb,
+    char* out_efi_path,
+    int   efi_path_size
 ) {
     char output[4096];
     char ps_cmd[2048];
@@ -118,14 +157,15 @@ int write_iso_to_partition(
 
     if (progress_cb) progress_cb(90, 100);
 
-    // 3. Vérifier que le binaire EFI de boot est présent
-    char efi_path[64];
-    snprintf(efi_path, sizeof(efi_path), "%c:\\EFI\\boot\\bootx64.efi", drive_letter);
-    if (GetFileAttributesA(efi_path) == INVALID_FILE_ATTRIBUTES) {
+    // 3. Chercher bootx64.efi récursivement sous EFI\ (gère toutes les distributions)
+    char efi_dir[16];
+    snprintf(efi_dir, sizeof(efi_dir), "%c:\\EFI", drive_letter);
+
+    if (!find_efi_binary(efi_dir, "\\EFI", out_efi_path, efi_path_size)) {
         fprintf(stderr,
-            "[Erreur] Binaire EFI introuvable apres la copie : %s\n"
-            "         L'ISO n'est peut-etre pas un ISO Linux UEFI (bootx64.efi manquant).\n",
-            efi_path);
+            "[Erreur] bootx64.efi introuvable sous %c:\\EFI\\\n"
+            "         L'ISO n'est peut-etre pas un ISO Linux UEFI.\n",
+            drive_letter);
         snprintf(ps_cmd, sizeof(ps_cmd),
             "powershell -NoProfile -Command \""
             "Dismount-DiskImage -ImagePath '%s'\"",
@@ -133,7 +173,7 @@ int write_iso_to_partition(
         run_process_with_input(ps_cmd, NULL, output, sizeof(output));
         return -1;
     }
-    printf("[Pleco] Binaire EFI present : %s\n", efi_path);
+    printf("[Pleco] Binaire EFI trouve : %c:%s\n", drive_letter, out_efi_path);
 
     // 4. Démonter l'ISO
     snprintf(ps_cmd, sizeof(ps_cmd),

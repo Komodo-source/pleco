@@ -17,7 +17,8 @@ int bcd_restore(const char* backup_path);
 int bcd_create_entry(const char* description, char* out_identifier);
 
 // Configurer l'entrée pour pointer vers notre partition
-int bcd_configure_entry(const char* identifier, char drive_letter);
+// efi_path : chemin relatif vers bootx64.efi (ex: "\EFI\BOOT\BOOTx64.EFI")
+int bcd_configure_entry(const char* identifier, char drive_letter, const char* efi_path);
 
 // Supprimer l'entrée (nettoyage post-installation)
 int bcd_delete_entry(const char* identifier);

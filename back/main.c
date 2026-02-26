@@ -108,6 +108,8 @@ int main(int argc, char* argv[]) {
 
     // Identifiant BCD — initialisé vide pour le nettoyage d'urgence
     char bcd_id[BCD_ID_MAX] = {0};
+    // Chemin EFI détecté dans l'ISO (ex: \EFI\BOOT\BOOTx64.EFI)
+    char efi_path[MAX_PATH] = {0};
 
     printf("[Info] ISO  : %s\n", iso_path);
     printf("[Info] Mode : %s\n\n", install_mode);
@@ -176,7 +178,8 @@ int main(int argc, char* argv[]) {
     // ── Étape 4 : Écrire l'ISO ────────────────────────────────────────────
 
     printf("\n[Etape 4/5] Ecriture de l'ISO sur %c:...\n", TEMP_DRIVE_LETTER);
-    if (write_iso_to_partition(iso_path, TEMP_DRIVE_LETTER, on_progress) != 0) {
+    if (write_iso_to_partition(iso_path, TEMP_DRIVE_LETTER, on_progress,
+                               efi_path, sizeof(efi_path)) != 0) {
         fprintf(stderr, "\n[Erreur] Ecriture de l'ISO echouee.\n");
         // BCD pas encore modifié — cleanup sans bcd_id
         emergency_cleanup(NULL);
@@ -195,7 +198,7 @@ int main(int argc, char* argv[]) {
         return 1;
     }
 
-    if (bcd_configure_entry(bcd_id, TEMP_DRIVE_LETTER) != 0) {
+    if (bcd_configure_entry(bcd_id, TEMP_DRIVE_LETTER, efi_path) != 0) {
         fprintf(stderr, "[Erreur] Configuration BCD echouee.\n");
         // Ici bcd_id est rempli — on le supprime dans le cleanup
         emergency_cleanup(bcd_id);
