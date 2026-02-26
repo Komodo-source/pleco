@@ -1,0 +1,27 @@
+{
+  "name": "pleco",
+  "version": "1.0.0",
+  "description": "no description",
+  "homepage": "https://github.com/Komodo-source/pleco#readme",
+  "bugs": {
+    "url": "https://github.com/Komodo-source/pleco/issues"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Komodo-source/pleco.git"
+  },
+  "license": "ISC",
+  "author": "Komodo",
+  "type": "commonjs",
+  "main": "src/main/main.js",
+  "scripts": {
+    "start": "electron .",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "devDependencies": {
+    "electron": "^40.6.0"
+  },
+  "dependencies": {
+    "request": "^2.88.2"
+  }
+}

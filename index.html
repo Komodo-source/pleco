@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Pleco</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,700;1,9..144,300&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://unpkg.com/flickity@2/dist/flickity.min.css">
+  <script src="https://unpkg.com/flickity@2/dist/flickity.pkgd.min.js"></script>
+  <link rel="stylesheet" href="style/style.css">
+
+</head>
+<body>
+  <main>
+    <aside class="sidebar">
+      <div class="logo">
+        <pre class="logo-ascii">
+                                   +++*
+                                *++*#**
+                              =*########       =*###
+                            +*########%      *=*#####%
+                           *#########%%     **######%%%
+                         +*##*######%%    *+*#######%%@
+                         *##########     ***#####%%%%%@
+                       *####%+#%**%%%##%#**##%%#%%%%%
+                 *#*#######%#%%%###%%%*%%#%%%%%%%%##%##%%%%#####%#%
+              +*#*#%%%%%##%%%%%%%%#%%%%@%%%%#*%%%%##****###%%%%##%%%@@
+            **##%%#%%%%%%#%%@%%%%#*%%%%##%%%%%###**%@@@%%@%%%@%%%%%%%%%%
+          *####%%%%%%%%%%%#%%##%%##@@@@@@@@@@%%@@@##%%%@%%%%%%
+        **######%#%%#%%%%%#%%@@%%@%@@@%@@@@@@@@@@@%@%%@
+        +*#%%%%%%%%%%%%%%%%%@@%#%%#%@%@@%#%@@@%%%%%%%%@@
+        +*###%##%%#%%%%@@%@%@%@@@@@@@@@@@%%%%%%%%%%%%%%@@
+         **#%#%%#%%#%%@%%%@@%@@@@%%@%%%%%  ##%%%%%%%%%%%%@@
+           #**###%%%%#%%%%%%%@@#%%%         #%%%%%%%%%%%%%
+                 ####%%%*##%#%%######%        ##%%%%%%%%%@
+                          +#%%%#######%%%        ###%%%%%
+                           **%##########%%           *#
+                             +*##**######%%
+                              ++*#####***##
+                                 ++**###***
+                                      =--
+        </pre>
+        <div class="logo-name">Ple<span>co</span></div>
+      </div>
+
+      <nav>
+        <a href="#" class="active">Home</a>
+        <a href="#">Downloads</a>
+        <a href="#">News</a>
+        <a href="#">About</a>
+      </nav>
+
+      <button class="theme-toggle" onclick="toggleTheme()">
+        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <circle cx="12" cy="12" r="5"/>
+          <line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>
+          <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>
+          <line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>
+        </svg>
+        Toggle theme
+      </button>
+    </aside>
+
+    <div class="content">
+      <div class="topbar">
+        <div class="search-wrap">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/>
+          </svg>
+          <input type="search" id="search" autocomplete="off" placeholder="Search a distribution…">
+        </div>
+        <div class="topbar-hint">Not sure what to pick? <a href="https://distrochooser.de/" target="_blank">Run the selector →</a></div>
+      </div>
+
+      <div class="hero">
+        <div class="hero-text">
+          <h2>Your next OS,<br><em>one click away.</em></h2>
+          <p>Pick a Linux distribution, and Pleco handles everything — no USB key, no ISO, no partitioning hassle.</p>
+        </div>
+        <div class="hero-stats">
+          <div class="stat">
+            <div class="stat-num">247</div>
+            <div class="stat-label">Distributions</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">3.2k</div>
+            <div class="stat-label">Installs done</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">2</div>
+            <div class="stat-label">Install modes</div>
+          </div>
+          <div class="stat">
+            <div class="stat-num">0</div>
+            <div class="stat-label">USB keys needed</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="carousel-section">
+        <p class="section-label"><span>—</span> New releases</p>
+        <div class="gallery js-flickity" data-flickity-options='{"wrapAround": true, "autoPlay": 3500}'>
+          <div class="distro-card">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/9e/UbuntuCoF.svg">
+            <div class="distro-card-name">Ubuntu</div>
+            <div class="distro-badge">24.04 LTS</div>
+          </div>
+          <div class="distro-card">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/3/3f/Fedora_logo.svg">
+            <div class="distro-card-name">Fedora</div>
+            <div class="distro-badge">40</div>
+          </div>
+          <div class="distro-card">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/4/4a/Debian-OpenLogo.svg">
+            <div class="distro-card-name">Debian</div>
+            <div class="distro-badge">12.5</div>
+          </div>
+          <div class="distro-card">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/d/d0/OpenSUSE_Logo.svg">
+            <div class="distro-card-name">openSUSE</div>
+            <div class="distro-badge">Tumbleweed</div>
+          </div>
+          <div class="distro-card">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/1/17/elementary_os_logo.svg">
+            <div class="distro-card-name">Elementary</div>
+            <div class="distro-badge">7.1</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bottom-grid">
+        <div class="featured-card">
+          <div class="featured-top">
+            <img src="https://upload.wikimedia.org/wikipedia/commons/9/9e/UbuntuCoF.svg">
+            <div>
+              <div class="featured-name">Ubuntu</div>
+              <div class="featured-sub">24.04.1 LTS · Noble Numbat · 5.6 GB</div>
+            </div>
+            <div class="featured-tag">Most downloaded</div>
+          </div>
+          <div class="featured-desc">
+            The world's most popular Linux OS — trusted by developers, enterprises and everyday users. The best choice if you're switching from Windows for the first time.
+          </div>
+          <div class="chips">
+            <div class="chip good">Beginner friendly</div>
+            <div class="chip good">5yr LTS support</div>
+            <div class="chip good">Large community</div>
+            <div class="chip">APT + Snap</div>
+            <div class="chip">GNOME desktop</div>
+          </div>
+          <button onclick="downloadFile(
+              'https://releases.ubuntu.com/24.04.4/ubuntu-24.04.4-desktop-amd64.iso',
+              './iso/ubuntu-24.04.4-desktop-amd64.isoà'
+            )">
+            Download
+            </button>
+        </div>
+
+        <div class="why-card">
+          <h2>Why switch<br>to <em>Linux?</em></h2>
+          <div class="why-row">
+            <div class="why-icon"><img src="https://img.icons8.com/?size=100&id=12324&format=png&color=000000" alt=""></div>
+            <div>
+              <div class="why-title">No telemetry</div>
+              <div class="why-desc">You own your OS. No background data collection, no forced updates.</div>
+            </div>
+          </div>
+          <div class="why-row">
+            <div class="why-icon"><img src="https://img.icons8.com/?size=100&id=0ZNXJnXqu3Lh&format=png&color=000000" alt=""></div>
+            <div>
+              <div class="why-title">Lighter & faster</div>
+              <div class="why-desc">More resources for your work, not for the OS itself.</div>
+            </div>
+          </div>
+          <div class="why-row">
+            <div class="why-icon"><img src="https://img.icons8.com/?size=100&id=Oa7ycM2DCmbK&format=png&color=000000" alt=""></div>
+            <div>
+                <div class="why-title">Full control</div>
+              <div class="why-desc">Customize everything, from the kernel to the desktop shell.</div>
+            </div>
+          </div>
+          <div class="why-row">
+            <div class="why-icon"><img src="https://img.icons8.com/?size=100&id=kJif3uYqwRU9&format=png&color=000000" alt=""></div>
+            <div>
+              <div class="why-title">Free, forever</div>
+              <div class="why-desc">No license, no subscription, no activation key. Ever.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </main>
+
+  <script src="./src/renderer/renderer.js"></script>
+</body>
+</html>
