@@ -9,7 +9,7 @@ int verify_iso_sha256(const char* iso_path, const char* expected_hash);
 
 int write_iso_to_partition(
     const char* iso_path,
-    const char* partition_path,
+    char drive_letter,
     progress_callback_t progress_cb
 );
 
