@@ -1,3 +1,4 @@
+// utils.c
 #include "header/utils.h"
 #include <stdio.h>
 #include <string.h>
@@ -11,32 +12,39 @@ int run_process_with_input(
     HANDLE stdin_read,  stdin_write;
     HANDLE stdout_read, stdout_write;
     SECURITY_ATTRIBUTES sa = {0};
-    sa.nLength = sizeof(SECURITY_ATTRIBUTES);
+    sa.nLength        = sizeof(SECURITY_ATTRIBUTES);
     sa.bInheritHandle = TRUE;
 
     if (!CreatePipe(&stdin_read,  &stdin_write,  &sa, 0)) return -1;
     if (!CreatePipe(&stdout_read, &stdout_write, &sa, 0)) return -1;
 
-    SetHandleInformation(stdin_write,  HANDLE_FLAG_INHERIT, 0);
-    SetHandleInformation(stdout_read,  HANDLE_FLAG_INHERIT, 0);
+    SetHandleInformation(stdin_write, HANDLE_FLAG_INHERIT, 0);
+    SetHandleInformation(stdout_read, HANDLE_FLAG_INHERIT, 0);
 
     STARTUPINFOA si = {0};
-    si.cb          = sizeof(STARTUPINFOA);
-    si.dwFlags     = STARTF_USESTDHANDLES;
-    si.hStdInput   = stdin_read;
-    si.hStdOutput  = stdout_write;
-    si.hStdError   = stdout_write;
+    si.cb        = sizeof(STARTUPINFOA);
+    si.dwFlags   = STARTF_USESTDHANDLES;
+    si.hStdInput  = stdin_read;
+    si.hStdOutput = stdout_write;
+    si.hStdError  = stdout_write;
 
     PROCESS_INFORMATION pi = {0};
 
+    // Copier dans un buffer mutable — CreateProcessA exige LPSTR (non-const)
+    char cmd[4096];
+    strncpy(cmd, executable, sizeof(cmd) - 1);
+    cmd[sizeof(cmd) - 1] = '\0';
+
     if (!CreateProcessA(
-        NULL, (LPSTR)executable,
-        NULL, NULL,
-        TRUE,
-        CREATE_NO_WINDOW,
-        NULL, NULL,
-        &si, &pi
+            NULL, cmd,
+            NULL, NULL,
+            TRUE,
+            CREATE_NO_WINDOW,
+            NULL, NULL,
+            &si, &pi
     )) {
+        CloseHandle(stdin_read);  CloseHandle(stdin_write);
+        CloseHandle(stdout_read); CloseHandle(stdout_write);
         return -1;
     }
 
@@ -71,6 +79,12 @@ int run_process_with_input(
     CloseHandle(stdout_read);
     CloseHandle(pi.hProcess);
     CloseHandle(pi.hThread);
+
+    // robocopy retourne 1 quand des fichiers ont été copiés — ce n'est pas une erreur
+    if (exit_code == 1 &&
+        (strstr(executable, "robocopy") || strstr(executable, "ROBOCOPY"))) {
+        return 0;
+    }
 
     return (exit_code == 0) ? 0 : -1;
 }
